@@ -1,4 +1,3 @@
-import asyncio
 import hashlib
 import base64
 import hmac
@@ -105,25 +104,25 @@ class Miniserver:
             Exception("Response code other than 200")
 
     def run_websocket(self):
-        asyncio.run(self.websocket_handler())
+        self.websocket_handler()
 
-    async def websocket_handler(self):
+    def websocket_handler(self):
         url = f"wss://{self.hostname}:{self.port}/ws/rfc6455"
-        async with websockets.connect(url, subprotocols=["remotecontrol"]) as self.websocket:
-            await asyncio.create_task(self.websocket_authenticate())
+        with websockets.connect(url, subprotocols=["remotecontrol"]) as self.websocket:
+            self.websocket_authenticate()
 
-            await asyncio.create_task(self.send_from_queue())
+            self.send_from_queue()
 
-    async def websocket_authenticate(self):
-        await self.exchange_keys()
-        await self.auth_user()
+    def websocket_authenticate(self):
+        self.exchange_keys()
+        self.auth_user()
 
-    async def exchange_keys(self):
-        resp = await self.ws_send_command(f"jdev/sys/keyexchange/{self.encrypted_session_key}")
+    def exchange_keys(self):
+        resp = self.ws_send_command(f"jdev/sys/keyexchange/{self.encrypted_session_key}")
         self.session_key_from_server = resp['value']
 
-    async def auth_user(self):
-        resp = await self.ws_send_command(f"jdev/sys/getkey2/{self.user_name}")
+    def auth_user(self):
+        resp = self.ws_send_command(f"jdev/sys/getkey2/{self.user_name}")
         val = resp['value']
 
         self.user_salt = val['salt']
@@ -135,7 +134,7 @@ class Miniserver:
             pw_hash = hashlib.sha256(to_hash.encode()).hexdigest().upper()
             user_hash = hmac.new(user_key, f"{self.user_name}:{pw_hash}".encode(), hashlib.sha256).hexdigest()
 
-            await self.ws_send_command(f"jdev/sys/getjwt/{user_hash}/{self.user_name}/4/{self.uuid}/{self.client_info}")
+            self.ws_send_command(f"jdev/sys/getjwt/{user_hash}/{self.user_name}/4/{self.uuid}/{self.client_info}")
 
             logging.info(f"User {self.user_name} authenticated correctly")
 
@@ -144,7 +143,7 @@ class Miniserver:
             pw_hash = hashlib.sha1(to_hash.encode()).hexdigest().upper()
             user_hash = hmac.new(user_key, f"{self.user_name}:{pw_hash}".encode(), hashlib.sha1).hexdigest()
 
-            await self.ws_send_command(f"jdev/sys/getjwt/{user_hash}/{self.user_name}/4/{self.uuid}/{self.client_info}")
+            self.ws_send_command(f"jdev/sys/getjwt/{user_hash}/{self.user_name}/4/{self.uuid}/{self.client_info}")
 
             logging.info(f"User {self.user_name} authenticated correctly")
         else:
@@ -152,32 +151,32 @@ class Miniserver:
             raise NotImplementedError
 
     """ Sends commands from the queue """
-    async def send_from_queue(self):
+    def send_from_queue(self):
         while True:
             if not self.input_queue.empty():
-                await self.ws_send_command(self.input_queue.get())
+                self.ws_send_command(self.input_queue.get())
 
-    async def secret_command(self, command: str) -> (int, str):
+    def secret_command(self, command: str) -> (int, str):
         logging.info(f"ENC>: {command}")
         aes_command = self.encrypt_aes(f"salt/{self.salt}/{command}")  # Space because of padding
         cipher = base64.standard_b64encode(aes_command)
         enc_cipher = urllib.parse.quote(cipher)
-        resp = await self.ws_send_command(f"jdev/sys/enc/{enc_cipher}")
+        resp = self.ws_send_command(f"jdev/sys/enc/{enc_cipher}")
         return resp
 
-    async def ws_send_command(self, command) -> dict:
+    def ws_send_command(self, command) -> dict:
         logging.info(f">>>>: {command}")
-        await self.websocket.send(command)
+        self.websocket.send(command)
         try:
-            resp = await asyncio.wait_for(self.command_response_loop(command), timeout=30)
+            resp = self.command_response_loop(command)
             return resp
         except TimeoutError:
             logging.error(f"Waited too long for response of the command: {command}")
 
-    async def command_response_loop(self, command):
+    def command_response_loop(self, command):
         loop = True
         while loop:
-            message = await self.websocket.recv()
+            message = self.websocket.recv()
             logging.info(f"<<<<: {message}")
             if message[0] == "{":
                 message_json = json.loads(message)
