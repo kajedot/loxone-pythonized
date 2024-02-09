@@ -2,9 +2,9 @@
 
 ## What does this program do?
 1. Establishing connection to the Loxone Miniserver using WebSockets
-2. Authenticating with the user account
-3. Sending commands that are added to the queue in the `Controller.py` file.
-
+2. Authenticating with the user credentials using hashing method provided by a server
+3. Sending AES encrypted commands. They can be added to the queue, and then send while invoking the Miniserver module (see example in the Controller.py file).
+   
 Communication is made using the flow described by the document provided by the Loxone Company: [COMMUNICATING WITH
 THE LOXONE MINISERVER](https://www.loxone.com/dede/wp-content/uploads/sites/2/2022/06/1300_Communicating-with-the-Miniserver.pdf#h.59u218wukskj) (version 13.0)
 
