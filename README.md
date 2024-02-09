@@ -23,6 +23,8 @@ THE LOXONE MINISERVER](https://www.loxone.com/dede/wp-content/uploads/sites/2/20
   For example (Linux / macOS):
   `export MINISERVER_SN=ABCD12345678`
 
+Tested on Python 3.8 and 3.11. 
+
 Disclaimer:
 This software comes without any warranty. 
 Feel free to fork and contribute :)
