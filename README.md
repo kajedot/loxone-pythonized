@@ -10,8 +10,8 @@ THE LOXONE MINISERVER](https://www.loxone.com/dede/wp-content/uploads/sites/2/20
 
 ## How to run?
 0. Clone this repo and go to its root folder:
-  `git clone https://github.com/kajedot/loxone-pythonized.git`
-  `cd loxone-pythonized`
+  `git clone https://github.com/kajedot/loxone-pythonized.git` \
+  `cd loxone-pythonized` 
   
 1. Install requirements:
 `pip install src/requirements.txt`
