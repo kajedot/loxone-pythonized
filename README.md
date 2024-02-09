@@ -9,7 +9,7 @@ Communication is made using the flow described by the document provided by the L
 THE LOXONE MINISERVER](https://www.loxone.com/dede/wp-content/uploads/sites/2/2022/06/1300_Communicating-with-the-Miniserver.pdf#h.59u218wukskj) (version 13.0)
 
 ## How to run?
-0. Clone this repo and go to its root folder:
+0. Clone this repo and go to its root folder: \
   `git clone https://github.com/kajedot/loxone-pythonized.git` \
   `cd loxone-pythonized` 
   
