@@ -19,8 +19,9 @@ THE LOXONE MINISERVER](https://www.loxone.com/dede/wp-content/uploads/sites/2/20
 2. Define environment variables:
    - `MINISERVER_SN`: serial number of your Miniserver (12 alpha-numeric digits)
    - `MINISERVER_USER`: username on the miniserver that you want to use
-   - `MINISERVER_PASSWD`: password of the user
-  For example (Linux / macOS):
+   - `MINISERVER_PASSWD`: password of the user \
+   \
+   For example (Linux / macOS): \
   `export MINISERVER_SN=ABCD12345678`
 
 Tested on Python 3.8 and 3.11. 
